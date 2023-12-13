@@ -1,21 +1,22 @@
-
 #!/bin/bash
 
-# writes timestamp to each item in dynamodb table
+# Writes a timestamp to each item in a DynamoDB table
 
-table = sample-table-name
+table=$1
 
-export = itemIds = $(aws dynamodb scan --table-name $sample-table-name --query "Items[*].[itemId.S]" --output text)
+itemIds=$(aws dynamodb scan --table-name "$table" --query "Items[*].[itemId.S]" --output text)
 
-for itemId in $itemIds ;
-do
-  echo "updating $itemId"
+for itemId in $itemIds; do
+  echo "Updating $itemId"
+  
   aws dynamodb update-item \
-    --table-name dynamodb-table \
-    --key "{\"itemId\":{\"S\":\"${itemId//[$'\t\r\n ']}\"}}"  \
+    --table-name "$table" \
+    --key "{\"itemId\":{\"S\":\"${itemId//[$'\t\r\n ']}\"}}" \
     --update-expression "SET timestamp = :current_time" \
-    --expression-attribute-values '{":current_time": {"S": "'`date +%F-%H-%M-%S`'"}}' \
-    --return-values UPDATED_NEW     
-  echo "completed $itemId"
+    --expression-attribute-values "{\":current_time\": {\"S\": \"$(date '+%F-%H-%M-%S')\"}}" \
+    --return-values UPDATED_NEW
+
+  echo "Completed $itemId"
   echo ""
 done
+
