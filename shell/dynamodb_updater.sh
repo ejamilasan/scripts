@@ -8,7 +8,7 @@ itemIds=$(aws dynamodb scan --table-name "$table" --query "Items[*].[itemId.S]" 
 
 for itemId in $itemIds; do
   echo "Updating $itemId"
-  
+
   aws dynamodb update-item \
     --table-name "$table" \
     --key "{\"itemId\":{\"S\":\"${itemId//[$'\t\r\n ']}\"}}" \
