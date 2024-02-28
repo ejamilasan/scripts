@@ -80,3 +80,5 @@ Pipfile.lock
 
 # poetry
 poetry.lock
+
+.DS_Store
