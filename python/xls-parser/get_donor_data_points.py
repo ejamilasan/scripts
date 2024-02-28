@@ -1,5 +1,3 @@
-from datetime import datetime
-
 import xlrd
 from openpyxl import Workbook
 
@@ -13,13 +11,8 @@ def get_list(file_path):
     for row_idx in range(1, sheet.nrows):
         row = sheet.row_values(row_idx)
         donorId = row[2]
-        try:
-            donorDate = xlrd.xldate_as_datetime(row[3], workbook.datemode)
-        except:
-            donorDate = ""
-
+        donorDate = xlrd.xldate_as_datetime(row[3], workbook.datemode)
         filter_1 = row[7]
-        filter_2 = row[10]
         if donorDate:
             if filter_1 == "W007":
                 output_tuples.append((donorId, donorDate))
@@ -41,10 +34,7 @@ def filter_data(file_path, reference_tuples):
             row = sheet.row_values(row_idx)
             donorAlias = row[3]
             donorId = row[5]
-            try:
-                donorDate = xlrd.xldate_as_datetime(row[7], workbook.datemode)
-            except:
-                donorDate = ""
+            donorDate = xlrd.xldate_as_datetime(row[7], workbook.datemode)
             donorWeight = row[9]
             donorUcn = row[12]
 
@@ -70,7 +60,7 @@ if __name__ == "__main__":
     referenced_xls = "sample1.xls"
     data_xls = "sample2.xls"
 
-    reference_tuples = get_list(reference_xls)
+    reference_tuples = get_list(referenced_xls)
     output_rows = filter_data(data_xls, reference_tuples)
 
     wb = Workbook()
