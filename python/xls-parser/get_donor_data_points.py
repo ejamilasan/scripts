@@ -1,6 +1,8 @@
+from datetime import datetime
+
 import xlrd
 from openpyxl import Workbook
-from datetime import datetime
+
 
 def get_list(file_path):
     workbook = xlrd.open_workbook(file_path)
@@ -14,7 +16,7 @@ def get_list(file_path):
         try:
             donorDate = xlrd.xldate_as_datetime(row[3], workbook.datemode)
         except:
-            donorDate = ''
+            donorDate = ""
 
         filter_1 = row[7]
         filter_2 = row[10]
@@ -23,6 +25,7 @@ def get_list(file_path):
                 output_tuples.append((donorId, donorDate))
 
     return output_tuples
+
 
 def filter_data(file_path, reference_tuples):
     workbook = xlrd.open_workbook(file_path)
@@ -41,13 +44,15 @@ def filter_data(file_path, reference_tuples):
             try:
                 donorDate = xlrd.xldate_as_datetime(row[7], workbook.datemode)
             except:
-                donorDate = ''
+                donorDate = ""
             donorWeight = row[9]
             donorUcn = row[12]
 
             if donorDate and donorId == reference_donor_id:
                 # Append to the closest dates list
-                closest_dates.append((donorId, donorDate, donorWeight, donorAlias, donorUcn))
+                closest_dates.append(
+                    (donorId, donorDate, donorWeight, donorAlias, donorUcn)
+                )
 
         # Sort the closest dates list based on the difference
         closest_dates.sort(key=lambda x: abs(reference_donor_date - x[1]))
@@ -60,9 +65,10 @@ def filter_data(file_path, reference_tuples):
 
     return output_rows
 
+
 if __name__ == "__main__":
-    referenced_xls = 'sample1.xls'
-    data_xls = 'sample2.xls'
+    referenced_xls = "sample1.xls"
+    data_xls = "sample2.xls"
 
     reference_tuples = get_list(reference_xls)
     output_rows = filter_data(data_xls, reference_tuples)
